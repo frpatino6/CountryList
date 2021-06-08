@@ -32,16 +32,30 @@ class CountriesPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Column(
-                  children: [
-                    _createCountrieRow(),
-                    _createCountriePopulationRow(),
-                    _createCountryBorders(),
-                    _createLanguage(),
-                    _createLatitude(),
-                    _createCurrency(),
-                    _createflag()
-                  ],
+                Visibility(
+                  replacement: Container(
+                    height: MediaQuery.of(context).size.height*.90,
+                    child: Center(
+                      child: Text(
+                        "NO HAY DATA",
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  visible: countriesController.result.value.name == null
+                      ? false
+                      : true,
+                  child: Column(
+                    children: [
+                      _createCountrieRow(),
+                      _createCountriePopulationRow(),
+                      _createCountryBorders(),
+                      _createLanguage(),
+                      _createLatitude(),
+                      _createCurrency(),
+                      _createflag()
+                    ],
+                  ),
                 )
               ],
             ),
@@ -108,7 +122,7 @@ class CountriesPage extends StatelessWidget {
           final item = countriesController.result.value.borders![index];
           if (index == 0) {
             return Text(
-              "LIMITES",
+              "FONTERAS",
               style: TextStyle(fontSize: 20, color: Colors.white),
             );
           } else
@@ -230,13 +244,16 @@ class CountriesPage extends StatelessWidget {
   }
 
   Widget _createflag() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SvgPicture.network(
-        countriesController.result.value.flag!,
-        placeholderBuilder: (context) => CircularProgressIndicator(),
-        height: 128.0,
-      ),
-    );
+    if (countriesController.result.value.flag != null)
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SvgPicture.network(
+          countriesController.result.value.flag ?? "",
+          placeholderBuilder: (context) => CircularProgressIndicator(),
+          height: 128.0,
+        ),
+      );
+    else
+      return Container();
   }
 }
